@@ -1,0 +1,9 @@
+[package]
+authors = ["jev"]
+edition = "2018"
+name = "proto-pest-latex"
+version = "0.1.0"
+
+[dependencies]
+pest = "^2"
+pest_derive = "^2"

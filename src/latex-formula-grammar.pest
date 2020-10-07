@@ -1,0 +1,56 @@
+// Control Characters & Meta Characters  ------------------------------------------------------------------------------
+control_character      = { "\\" }
+whitespace             = { (space_character | tab_character | linebreak_character)+ }
+space_character        = { " " }
+tab_character          = { "\t" }
+linebreak_character    = { newline_character | caret_return_character | (newline_character ~ caret_return_character) }
+newline_character      = { "\n" }
+caret_return_character = { "\r" }
+
+// Formulas -----------------------------------------------------------------------------------------------------------
+formula = { (variable | number | operator | whitespace) + }
+
+variable = { (!control_character ~ letter_latin) | letter_greek }
+
+operator = {
+    operator_equal |
+    operator_plus  |
+    operator_power
+}
+
+operator_equal = { "=" }
+operator_plus  = { "+" }
+operator_power = { "^" }
+
+// Numbers ------------------------------------------------------------------------------------------------------------
+number = { digit+ }   // TODO decimal points?
+digit  = { '0'..'9' }
+
+// Latin Letters ------------------------------------------------------------------------------------------------------
+letter_latin       = { letter_latin_lower | letter_latin_upper }
+letter_latin_lower = { 'a'..'z' }
+letter_latin_upper = { 'A'..'Z' }
+
+// Greek Letters ------------------------------------------------------------------------------------------------------
+letter_greek = {
+    letter_alpha |
+    letter_beta  |
+    letter_pi
+}
+
+// Greek Letter Classes -----------------------------------------------------------------------------------------------
+letter_alpha = { letter_alpha_lower | letter_alpha_upper }
+letter_beta  = { letter_beta_lower | letter_beta_upper }
+letter_pi    = { letter_pi_lower | letter_pi_upper }
+
+// Lower-case Greek Letters -------------------------------------------------------------------------------------------
+letter_alpha_lower = { control_character ~ "alpha" }
+letter_beta_lower  = { control_character ~ "beta" }
+// ...
+letter_pi_lower = { control_character ~ "pi" }
+
+// Upper-case Greek Letters -------------------------------------------------------------------------------------------
+letter_alpha_upper = { control_character ~ "Alpha" }
+letter_beta_upper  = { control_character ~ "Beta" }
+// ...
+letter_pi_upper = { control_character ~ "Pi" }
