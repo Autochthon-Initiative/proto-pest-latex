@@ -14,14 +14,11 @@ round_brackets = { "(" ~ (formula|round_brackets)* ~  ")" }
 square_brackets = { "[" ~ (formula|square_brackets|round_brackets)* ~  "]" }
 curly_brackets =  { "{" ~ (formula|curly_brackets|square_brackets|round_brackets)* ~  "}" }
 
-l_bracket = {("("|"["|"{")}
-r_bracket = {(")"|"]"|"}")}
-
 //Expression -----------------------------------------------------------------------------------------------------------
 expression = { (formula | curly_brackets | square_brackets | round_brackets)+ }
 
 // Formulas -----------------------------------------------------------------------------------------------------------
-formula = { (operator | variable | number | whitespace)+ }
+formula = { (operator | variable | number | whitespace | trigonometric)+ }
 
 variable = { (!control_character ~ letter_latin) | letter_greek }
 
@@ -32,9 +29,12 @@ operator = {
     operator_multiplier |
     operator_division |
     operator_power |
+    operator_sqrt |
     operator_factorial |
     operator_sum 
 }
+
+pedex = {"_" ~ (formula | curly_brackets)}
 
 operator_factorial = {"!"}
 operator_equal = { "=" }
@@ -43,14 +43,27 @@ operator_minus  = { "-" }
 operator_multiplier = { "*" }
 operator_division  = { "/" }
 operator_power = { "^" }
-operator_sum = {control_character ~ "sum"}
+operator_sqrt = {control_character ~ "sqrt"}
+operator_sum = {control_character ~ "sum" ~ pedex}
+
+// Trigonometric functions ------------------------------------------------------------------------------------------------------------
+trigonometric = {
+    sin | cos | tan | asin | acos | atan 
+}
+
+sin = {control_character ~ "sin" ~ round_brackets}
+cos = {control_character ~ "cos" ~ round_brackets}
+tan = {control_character ~ "tan" ~ round_brackets}
+asin = {control_character ~ "arcsin" ~ round_brackets}
+acos = {control_character ~ "arccos" ~ round_brackets}
+atan = {control_character ~ "arctan" ~ round_brackets}
 
 // Numbers ------------------------------------------------------------------------------------------------------------
 number = { digit+ }   // TODO decimal points?
 digit  = { '0'..'9' }
 
 // Latin Letters ------------------------------------------------------------------------------------------------------
-letter_latin       = { letter_latin_lower | letter_latin_upper }
+letter_latin       = { (letter_latin_lower | letter_latin_upper) ~ (pedex|"") }
 letter_latin_lower = { 'a'..'z' }
 letter_latin_upper = { 'A'..'Z' }
 
