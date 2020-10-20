@@ -6,8 +6,9 @@ tab_character          = { "\t" }
 linebreak_character    = { newline_character | caret_return_character | (newline_character ~ caret_return_character) }
 newline_character      = { "\n" }
 caret_return_character = { "\r" }
+dots = {(dots_character|dot_character)}
 dots_character = {control_character ~ ("dots"|"ldots")}
-dot_character = {control_character ~ "cdots"}
+dot_character = {control_character ~ "cdot"}
 
 // Brackets ----------------------------------------------------------------------------------------
 round_brackets = { "(" ~ (formula|round_brackets)* ~  ")" }
@@ -15,10 +16,15 @@ square_brackets = { "[" ~ (formula|square_brackets|round_brackets)* ~  "]" }
 curly_brackets =  { "{" ~ (formula|curly_brackets|square_brackets|round_brackets)* ~  "}" }
 
 //Expression -----------------------------------------------------------------------------------------------------------
+intro = {(begin_end|dollardollar|dollar)+} //Starting to implement the begin_end formula containers
+dollar = {"$" ~ expression ~ "$"}
+dollardollar = {"$$" ~ expression ~ "$$"}
+begin_end = {control_character ~ "begin{equation}" ~ expression ~ control_character ~ "end{equation}"}
+
 expression = { (formula | curly_brackets | square_brackets | round_brackets)+ }
 
 // Formulas -----------------------------------------------------------------------------------------------------------
-formula = { (operator | variable | number | whitespace | trigonometric)+ }
+formula = { (operator | variable | number | whitespace | dots | trigonometric) }
 
 variable = { (!control_character ~ letter_latin) | letter_greek }
 
@@ -39,7 +45,7 @@ pedex = {"_" ~ (formula | curly_brackets)}
 operator_factorial = {"!"}
 operator_equal = { "=" }
 operator_plus  = { "+" }
-operator_minus  = { "-" }
+operator_minus  = { ("-"|"–") }
 operator_multiplier = { "*" }
 operator_division  = { "/" }
 operator_power = { "^" }
