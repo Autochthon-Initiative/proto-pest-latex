@@ -16,7 +16,7 @@ square_brackets = { "[" ~ (formula|square_brackets|round_brackets)* ~  "]" }
 curly_brackets =  { "{" ~ (formula|curly_brackets|square_brackets|round_brackets)* ~  "}" }
 
 //Expression -----------------------------------------------------------------------------------------------------------
-intro = {(begin_end|dollardollar|dollar)+} //Starting to implement the begin_end formula containers
+intro = {(begin_end|dollardollar|dollar)} //Starting to implement the begin_end formula containers
 dollar = {"$" ~ expression ~ "$"}
 dollardollar = {"$$" ~ expression ~ "$$"}
 begin_end = {control_character ~ "begin{equation}" ~ expression ~ control_character ~ "end{equation}"}
@@ -48,8 +48,8 @@ operator_plus  = { "+" }
 operator_minus  = { ("-"|"–") }
 operator_multiplier = { "*" }
 operator_division  = { "/" }
-operator_power = { "^" }
-operator_sqrt = {control_character ~ "sqrt"}
+operator_power = { "^" ~ (formula | curly_brackets)}
+operator_sqrt = {control_character ~ "sqrt" ~ ("[" ~ (number|variable) ~ "]"|"")}
 operator_sum = {control_character ~ "sum" ~ pedex}
 
 // Trigonometric functions ------------------------------------------------------------------------------------------------------------
